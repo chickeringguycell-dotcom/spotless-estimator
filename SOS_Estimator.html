@@ -513,9 +513,9 @@
           <div style="font-size: 11px; color: var(--silver); margin-top: 2px;">Works 100% offline — zero Wi-Fi or PC needed!</div>
         </div>
         <div style="display: flex; gap: 6px;">
-          <a href="SOS_Estimator.html" download="SOS_Estimator.html" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%); color: #000000; font-weight: 900; font-size: 12px; padding: 10px 14px; border-radius: 8px; white-space: nowrap; box-shadow: 0 0 12px rgba(212,175,55,0.4);">
+          <button onclick="downloadAppFile()" style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none; border: none; cursor: pointer; background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%); color: #000000; font-weight: 900; font-size: 12px; padding: 10px 14px; border-radius: 8px; white-space: nowrap; box-shadow: 0 0 12px rgba(212,175,55,0.4);">
             📥 Download File
-          </a>
+          </button>
         </div>
       </div>
     </div>
@@ -1600,6 +1600,21 @@
       if (btn) btn.innerText = '⬇️ Install App';
     });
 
+    function downloadAppFile() {
+      const htmlContent = '<!DOCTYPE html>\\n' + document.documentElement.outerHTML;
+      const blob = new Blob([htmlContent], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'SOS_Estimator.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      
+      openModal('installHelperModal');
+    }
+
     function triggerInstall() {
       if (deferredPrompt) {
         deferredPrompt.prompt();
@@ -1610,17 +1625,7 @@
           deferredPrompt = null;
         });
       } else {
-        // Direct Download of Standalone Offline App
-        const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = 'SOS_Estimator.html';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        
-        // Show gentle confirmation
-        openModal('installHelperModal');
+        downloadAppFile();
       }
     }
 
