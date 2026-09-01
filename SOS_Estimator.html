@@ -1683,6 +1683,7 @@
       if (document.getElementById('doc-final-monthly')) document.getElementById('doc-final-monthly').innerText = monthlyPrice + ' / Month';
       if (document.getElementById('doc-final-date')) document.getElementById('doc-final-date').innerText = formattedStartDate;
       if (document.getElementById('doc-sign-sos-date')) document.getElementById('doc-sign-sos-date').innerText = getFormattedDate();
+      if (document.getElementById('doc-sign-client-date')) document.getElementById('doc-sign-client-date').innerText = getFormattedDate();
       
       const printName = document.getElementById('sigPrintName') ? document.getElementById('sigPrintName').value : contact;
       if (document.getElementById('doc-sign-client-name')) document.getElementById('doc-sign-client-name').innerText = printName || contact;
