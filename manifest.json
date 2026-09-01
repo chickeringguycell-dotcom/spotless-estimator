@@ -1,8 +1,10 @@
 {
+  "id": "/spotless-estimator/",
   "name": "SOS Estimator",
   "short_name": "SOS Estimator",
   "description": "Spotless Office Solutions Commercial Cleaning Quote Estimator",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#090A0D",
   "theme_color": "#D4AF37",
