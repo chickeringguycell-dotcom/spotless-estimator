@@ -1287,6 +1287,7 @@
     let occupants = 65;
     let visitsPerWeek = 3;
     let difficulty = 'normal';
+    let generatedProposalId = null;
 
     function changeStep(type, delta) {
       if (type === 'restrooms') {
@@ -1558,11 +1559,18 @@
       }
 
       // Proposal Modal updates
-      const comp = document.getElementById('companyName').value || 'Commercial Client';
-      document.getElementById('prop-client').innerText = comp;
-      document.getElementById('prop-scope').innerHTML = `• ${sqft.toLocaleString()} sq ft Office Cleaning (${visitsPerWeek}x Weekly)<br>• ${restrooms} Restrooms & ${kitchens} Breakrooms<br>• Surface sanitization, waste collection & vacuum/mopping`;
-      document.getElementById('prop-price-visit').innerText = `$${finalPrice.toFixed(2)}`;
-      document.getElementById('prop-monthly').innerText = `$${monthlyContract.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      const comp = document.getElementById('companyName') ? document.getElementById('companyName').value : 'Commercial Client';
+      if (document.getElementById('prop-client')) document.getElementById('prop-client').innerText = comp;
+      if (document.getElementById('prop-scope')) document.getElementById('prop-scope').innerHTML = `• ${sqft.toLocaleString()} sq ft Office Cleaning (${visitsPerWeek}x Weekly)<br>• ${restrooms} Restrooms & ${kitchens} Breakrooms<br>• Surface sanitization, waste collection & vacuum/mopping`;
+      if (document.getElementById('prop-price-visit')) document.getElementById('prop-price-visit').innerText = `$${finalPrice.toFixed(2)}`;
+      if (document.getElementById('prop-monthly')) document.getElementById('prop-monthly').innerText = `$${monthlyContract.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+      // Update 4-Page Commercial Agreement
+      try {
+        updateAgreementPreview();
+      } catch(e) {
+        console.log('updateAgreementPreview note:', e);
+      }
 
       // Audit Modal updates
       document.getElementById('audit-details').innerHTML = `
@@ -1640,7 +1648,6 @@
     // ==============================================================
     // 4-PAGE COMMERCIAL PROPOSAL & AGREEMENT JAVASCRIPT ENGINE
     // ==============================================================
-    let generatedProposalId = null;
 
     function getFormattedDate(d = new Date()) {
       return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
