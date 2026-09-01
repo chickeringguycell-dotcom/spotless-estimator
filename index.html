@@ -805,7 +805,7 @@
                     <div style="font-size: 20px; font-weight: 900; color: #0F172A; letter-spacing: -0.5px;">SPOTLESS OFFICE SOLUTIONS</div>
                     <div style="font-size: 11px; font-weight: 700; color: #B45309; text-transform: uppercase; letter-spacing: 1px;">Commercial Janitorial Services & Facility Care</div>
                     <div style="font-size: 10px; color: #475569; margin-top: 2px;">
-                      <b>Owners:</b> Guy Chickering & Jacquise Arrington • <b>Phone:</b> (206) 578-0727 • <b>Email:</b> sos.cleaning@outlook.com
+                      <b>Owners:</b> Guy Chickering & Jacquise Arrington • <b>Phone:</b> (206) 578-0727 • <b>Email:</b> sos.estimator@outlook.com
                     </div>
                   </div>
                 </div>
@@ -1114,7 +1114,7 @@
                     <div><b>Owner / Managing Director:</b> Guy Chickering</div>
                     <div><b>Co-Owner / Operations Lead:</b> Jacquise Arrington</div>
                     <div><b>Direct Phone:</b> (206) 578-0727</div>
-                    <div><b>Direct Email:</b> sos.cleaning@outlook.com</div>
+                    <div><b>Direct Email:</b> sos.estimator@outlook.com</div>
                     <div><b>Execution Date:</b> <span id="doc-sign-sos-date">September 1, 2026</span></div>
                   </div>
                 </div>
@@ -2007,12 +2007,12 @@ E-SIGNATURE & EXECUTION:
 • Execution Date: ${signDate}
 • Service Provider: Spotless Office Solutions LLC
 • Primary Contact: Guy Chickering & Jacquise Arrington ((206) 578-0727)
-• Master Business Email: sos.cleaning@outlook.com
+• Master Estimator Email: sos.estimator@outlook.com
 
-STATUS: Signed Contract Logged and Ready for Accounting & Payroll Scheduling.
+STATUS: Signed Contract Executed and Logged.
 `;
 
-      const mailtoUrl = `mailto:sos.cleaning@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const mailtoUrl = `mailto:sos.estimator@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       
       const a = document.createElement('a');
       a.href = mailtoUrl;
@@ -2020,7 +2020,6 @@ STATUS: Signed Contract Logged and Ready for Accounting & Payroll Scheduling.
       document.body.appendChild(a);
       a.click();
       a.remove();
-      alert('✓ Signed contract summary prepared and dispatched to sos.cleaning@outlook.com!');
     }
 
     function applySignatureToAgreement() {
@@ -2041,9 +2040,24 @@ STATUS: Signed Contract Logged and Ready for Accounting & Payroll Scheduling.
       closeModal('signatureModal');
       switchProposalTab('preview');
       
+      // Automatically email signed contract to sos.estimator@outlook.com
+      setTimeout(function() {
+        emailContractToBusiness();
+      }, 300);
+    }" style="height: 50px; max-width: 200px; object-fit: contain;">`;
+      }
+      if (document.getElementById('doc-sign-client-name')) {
+        document.getElementById('doc-sign-client-name').innerText = printName;
+      }
+      if (document.getElementById('doc-sign-client-date')) {
+        document.getElementById('doc-sign-client-date').innerText = getFormattedDate();
+      }
+      closeModal('signatureModal');
+      switchProposalTab('preview');
+      
       // Auto-prompt email contract
       setTimeout(function() {
-        if (confirm('Contract signed successfully! Would you like to email this signed agreement to sos.cleaning@outlook.com now?')) {
+        if (confirm('Contract signed successfully! Would you like to email this signed agreement to sos.estimator@outlook.com now?')) {
           emailContractToBusiness();
         }
       }, 400);
