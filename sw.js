@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sos-estimator-v3';
+const CACHE_NAME = 'sos-proposal-v5';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -6,7 +6,8 @@ const ASSETS_TO_CACHE = [
   './apple-touch-icon.png',
   './favicon.png',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './SOS_Estimator.html'
 ];
 
 self.addEventListener('install', (event) => {
@@ -24,7 +25,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log('Deleting old cache:', key);
+            console.log('Purging old cache:', key);
             return caches.delete(key);
           }
         })
