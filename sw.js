@@ -1,4 +1,4 @@
-const CACHE_NAME = 'spotless-estimator-v1';
+const CACHE_NAME = 'sos-estimator-v3';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -10,12 +10,12 @@ const ASSETS_TO_CACHE = [
 ];
 
 self.addEventListener('install', (event) => {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE);
     })
   );
-  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
@@ -24,32 +24,32 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
+            console.log('Deleting old cache:', key);
             return caches.delete(key);
           }
         })
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((networkResponse) => {
+    fetch(event.request)
+      .then((networkResponse) => {
         if (networkResponse && networkResponse.status === 200) {
-          const responseToCache = networkResponse.clone();
+          const responseClone = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
+            cache.put(event.request, responseClone);
           });
         }
         return networkResponse;
-      }).catch(() => {
-        return caches.match('./index.html');
-      });
-    })
+      })
+      .catch(() => {
+        return caches.match(event.request).then((cachedResponse) => {
+          if (cachedResponse) return cachedResponse;
+          return caches.match('./index.html');
+        });
+      })
   );
 });
