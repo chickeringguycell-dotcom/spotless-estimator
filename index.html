@@ -694,9 +694,7 @@
           <button class="btn-main" onclick="openSignatureModal()" style="font-size: 11px; padding: 6px 12px; background: #064E3B; color: #34D399; border: 1px solid #10B981;">✍️ E-Sign Contract</button>
         </div>
         <div style="display: flex; gap: 6px;">
-          <button onclick="printAgreementDocument()" style="background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%); color: #000000; font-weight: 900; font-size: 11px; padding: 7px 14px; border: none; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 0 10px rgba(212,175,55,0.4);">
-            🖨️ Print Agreement (PDF)
-          </button>
+          <button id="btn-print-agreement" onclick="printAgreementDocument()" style="background: linear-gradient(135deg, #F59E0B 0%, #D4AF37 100%); color: #000000; font-weight: 900; font-size: 11px; padding: 8px 14px; border: none; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; box-shadow: 0 2px 10px rgba(212,175,55,0.5); active { transform: scale(0.96); }">🖨️ Print Agreement (PDF)</button>
           <button onclick="shareAgreementDocument()" style="background: #2D3342; color: #FFFFFF; font-weight: 700; font-size: 11px; padding: 7px 12px; border: 1px solid var(--silver-border); border-radius: 6px; cursor: pointer;">
             📲 Share / Save
           </button>
@@ -1745,14 +1743,64 @@
 
     function printAgreementDocument() {
       updateAgreementPreview();
-      // Ensure preview tab is visible before printing
+      const btn = document.getElementById('btn-print-agreement');
+      if (btn) {
+        btn.innerHTML = '🔄 Searching Printers...';
+        btn.style.background = '#10B981';
+        btn.style.color = '#FFFFFF';
+        setTimeout(() => {
+          if (btn) {
+            btn.innerHTML = '🖨️ Print Agreement (PDF)';
+            btn.style.background = 'linear-gradient(135deg, #F59E0B 0%, #D4AF37 100%)';
+            btn.style.color = '#000000';
+          }
+        }, 3500);
+      }
+
+      // Ensure preview tab is active
       const scopeTab = document.getElementById('proposal-scope-tab');
       const previewTab = document.getElementById('proposal-preview-tab');
       if (scopeTab) scopeTab.style.display = 'none';
       if (previewTab) previewTab.style.display = 'block';
 
-      // Trigger system printer search dialog immediately on user gesture
-      window.print();
+      // 1. Synchronous native print
+      try {
+        window.print();
+      } catch(e) {
+        console.log('Native print note:', e);
+      }
+
+      // 2. Prepare standalone clean document blob for Android printer manager
+      const content = document.getElementById('print-agreement-container').innerHTML;
+      const fullHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <title>Spotless Office Solutions - Commercial Cleaning Agreement</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @page { size: letter portrait; margin: 0.3in 0.4in; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #0F172A; background: #FFFFFF; margin: 0; padding: 12px; }
+    .agreement-page { width: 100%; min-height: 9.8in; padding: 0.2in 0; page-break-after: always; }
+    .agreement-page:last-child { page-break-after: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    .print-sticky-bar { position: sticky; top: 0; background: #0F172A; color: #D4AF37; padding: 14px; text-align: center; font-weight: 900; font-size: 13px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; z-index: 9999; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+    @media print { .print-sticky-bar { display: none !important; } body { padding: 0; } }
+  </style>
+</head>
+<body>
+  <div class="print-sticky-bar" onclick="window.print()">
+    🖨️ TAP HERE TO PRINT / SEARCH FOR PRINTERS
+  </div>
+  ${content}
+  <script>
+    setTimeout(function() { window.print(); }, 250);
+  <\/script>
+</body>
+</html>`;
+
+      const blob = new Blob([fullHtml], { type: 'text/html' });
+      const blobUrl = URL.createObjectURL(blob);
+      const win = window.open(blobUrl, '_blank');
     }
 
     function shareAgreementDocument() {
