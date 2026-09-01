@@ -1763,7 +1763,7 @@
       updateAgreementPreview();
       const btn = document.getElementById('btn-print-agreement');
       if (btn) {
-        btn.innerHTML = '🔄 Searching Printers...';
+        btn.innerHTML = '🔄 Opening Printer...';
         btn.style.background = '#10B981';
         btn.style.color = '#FFFFFF';
         setTimeout(() => {
@@ -1772,7 +1772,7 @@
             btn.style.background = 'linear-gradient(135deg, #F59E0B 0%, #D4AF37 100%)';
             btn.style.color = '#000000';
           }
-        }, 3500);
+        }, 3000);
       }
 
       // Ensure preview tab is active
@@ -1787,54 +1787,30 @@
       } catch(e) {
         console.log('Native print note:', e);
       }
-
-      // 2. Prepare standalone clean document blob for Android printer manager
-      const content = document.getElementById('print-agreement-container').innerHTML;
-      const fullHtml = `<!DOCTYPE html>
-<html>
-<head>
-  <title>Spotless Office Solutions - Commercial Cleaning Agreement</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    @page { size: letter portrait; margin: 0.3in 0.4in; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #0F172A; background: #FFFFFF; margin: 0; padding: 12px; }
-    .agreement-page { width: 100%; min-height: 9.8in; padding: 0.2in 0; page-break-after: always; }
-    .agreement-page:last-child { page-break-after: auto; }
-    table { width: 100%; border-collapse: collapse; }
-    .print-sticky-bar { position: sticky; top: 0; background: #0F172A; color: #D4AF37; padding: 14px; text-align: center; font-weight: 900; font-size: 13px; border-radius: 8px; margin-bottom: 15px; cursor: pointer; z-index: 9999; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
-    @media print { .print-sticky-bar { display: none !important; } body { padding: 0; } }
-  </style>
-</head>
-<body>
-  <div class="print-sticky-bar" onclick="window.print()">
-    🖨️ TAP HERE TO PRINT / SEARCH FOR PRINTERS
-  </div>
-  ${content}
-  <script>
-    setTimeout(function() { window.print(); }, 250);
-  <\/script>
-</body>
-</html>`;
-
-      const blob = new Blob([fullHtml], { type: 'text/html' });
-      const blobUrl = URL.createObjectURL(blob);
-      const win = window.open(blobUrl, '_blank');
     }
 
     function shareAgreementDocument() {
       updateAgreementPreview();
-      const client = document.getElementById('doc-client-name').innerText || 'Commercial Client';
-      const monthly = document.getElementById('doc-price-monthly').innerText || '$0.00';
-      const shareText = `Spotless Office Solutions Commercial Cleaning Proposal & Agreement for ${client}. Monthly Contract: ${monthly}. Link: ${window.location.href}`;
+      const client = document.getElementById('doc-client-name') ? document.getElementById('doc-client-name').innerText : 'Commercial Client';
+      const monthly = document.getElementById('doc-price-monthly') ? document.getElementById('doc-price-monthly').innerText : '$0.00';
+      const propId = document.getElementById('doc-prop-id') ? document.getElementById('doc-prop-id').innerText : 'SOS-2026';
+      const shareTitle = `Spotless Office Solutions Agreement - ${client}`;
+      const shareText = `Spotless Office Solutions Commercial Cleaning Proposal & Agreement (${propId})\\nClient: ${client}\\nMonthly Contract: ${monthly}\\nDate: ${getFormattedDate()}\\n\\nLink: ${window.location.href}`;
       
       if (navigator.share) {
         navigator.share({
-          title: 'Spotless Office Solutions Proposal & Agreement',
+          title: shareTitle,
           text: shareText,
           url: window.location.href
         }).catch(() => {});
+      } else if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareText).then(() => {
+          alert('✓ Agreement summary and link copied to clipboard! You can paste and send via message or email.');
+        }).catch(() => {
+          window.print();
+        });
       } else {
-        printAgreementDocument();
+        window.print();
       }
     }
 
