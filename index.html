@@ -450,6 +450,7 @@
     }
   </style>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
 
@@ -1706,9 +1707,30 @@
 
     function printAgreementDocument() {
       updateAgreementPreview();
-      const content = document.getElementById('print-agreement-container').innerHTML;
-      
-      // Create dedicated isolated printable iframe for mobile Android & iOS
+      const element = document.getElementById('print-agreement-container');
+      const client = document.getElementById('doc-client-name').innerText || 'Commercial_Client';
+      const cleanClient = client.replace(/[^a-zA-Z0-9]/g, '_');
+      const filename = `Spotless_Cleaning_Agreement_${cleanClient}.pdf`;
+
+      // 1. Try html2pdf for instant direct PDF generation & download
+      if (typeof html2pdf !== 'undefined') {
+        const opt = {
+          margin:       [0.3, 0.4, 0.3, 0.4],
+          filename:     filename,
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { scale: 2, useCORS: true, logging: false },
+          jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' },
+          pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+        };
+
+        html2pdf().set(opt).from(element).save().then(() => {
+          console.log('PDF generated & downloaded successfully!');
+        }).catch(err => {
+          console.log('html2pdf note:', err);
+        });
+      }
+
+      // 2. Also trigger native mobile system printer sheet
       let iframe = document.getElementById('print-service-frame');
       if (!iframe) {
         iframe = document.createElement('iframe');
@@ -1731,39 +1753,15 @@
           <title>Spotless Office Solutions - Commercial Cleaning Agreement</title>
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
-            @page {
-              size: letter portrait;
-              margin: 0.4in;
-            }
-            body {
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-              color: #0F172A;
-              background: #FFFFFF;
-              margin: 0;
-              padding: 0;
-            }
-            .agreement-page {
-              width: 100%;
-              min-height: 9.8in;
-              padding: 0.2in 0;
-              box-sizing: border-box;
-              page-break-after: always;
-              page-break-inside: avoid;
-            }
-            .agreement-page:last-child {
-              page-break-after: auto;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-            }
-            @media print {
-              .no-print { display: none; }
-            }
+            @page { size: letter portrait; margin: 0.4in; }
+            body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #0F172A; background: #FFFFFF; margin: 0; padding: 0; }
+            .agreement-page { width: 100%; min-height: 9.8in; padding: 0.2in 0; box-sizing: border-box; page-break-after: always; page-break-inside: avoid; }
+            .agreement-page:last-child { page-break-after: auto; }
+            table { width: 100%; border-collapse: collapse; }
           </style>
         </head>
         <body>
-          ${content}
+          ${element.innerHTML}
         </body>
         </html>
       `);
