@@ -1275,13 +1275,47 @@
         
         <div style="font-weight: 800; color: #FFFFFF; margin-bottom: 6px;">To put the SOS Estimator icon on your screen:</div>
         <div style="margin-bottom: 8px;">
-          <b>• Android (Samsung):</b> Tap menu (⋮ or ☰) $\to$ tap <b>Add to Home screen</b>.
+          <b>• Android (Samsung):</b> Tap menu (⋮ or ☰) &rarr; tap <b>Add to Home screen</b>.
         </div>
         <div style="margin-bottom: 14px;">
-          <b>• Apple iPhone:</b> Tap Safari's <b>Share</b> button (square with arrow up) $\to$ tap <b>Add to Home Screen</b>.
+          <b>• Apple iPhone:</b> Tap Safari's <b>Share</b> button (square with arrow up) &rarr; tap <b>Add to Home Screen</b>.
         </div>
         
         <button class="btn-main" onclick="closeModal('installHelperModal')">Got It</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Save to Phone Helper Modal -->
+  <div id="saveHelperModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 style="font-weight: 900; color: var(--gold);">💾 Contract Saved to Phone!</h3>
+        <button class="close-btn" onclick="closeModal('saveHelperModal')">&times;</button>
+      </div>
+      <div style="font-size: 13px; line-height: 1.6; color: #E2E8F0;">
+        <div style="background: rgba(16,185,129,0.15); border: 1.5px solid #10B981; border-radius: 10px; padding: 14px; margin-bottom: 14px; text-align: center;">
+          <div style="font-size: 26px; margin-bottom: 4px;">✅</div>
+          <b style="color: #34D399; font-size: 15px;">Downloaded to Your Phone Files!</b>
+          <div id="saveModalFileName" style="font-size: 12px; color: #FFFFFF; font-weight: 800; margin-top: 4px; word-break: break-all;">SOS_Agreement_Client.html</div>
+        </div>
+
+        <div style="font-weight: 900; color: var(--gold); margin-bottom: 8px; font-size: 14px;">📁 How to Open or View It:</div>
+        
+        <div style="background: #1A1D24; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; border-left: 3px solid #38BDF8;">
+          <b style="color: #38BDF8;">📱 Samsung / Android Phones:</b><br>
+          1. Open your phone's <b>My Files</b> (or <b>Files</b>) app.<br>
+          2. Tap the <b>Downloads</b> folder.<br>
+          3. Tap the file to view, print, or attach to email anytime!
+        </div>
+
+        <div style="background: #1A1D24; border-radius: 8px; padding: 10px 12px; margin-bottom: 14px; border-left: 3px solid #A78BFA;">
+          <b style="color: #A78BFA;">🍏 Apple iPhones / iPads:</b><br>
+          1. Open the <b>Files</b> app &rarr; tap <b>Downloads</b>.<br>
+          2. <i>Tip:</i> To save as a pure PDF, tap <b>🖨️ Print (PDF)</b> &rarr; pinch out on the preview &rarr; tap <b>Save to Files</b>.
+        </div>
+
+        <button class="btn-main" onclick="closeModal('saveHelperModal')">Got It, Close</button>
       </div>
     </div>
   </div>
@@ -1454,11 +1488,13 @@
     }
 
     function openModal(id) {
-      document.getElementById(id).style.display = 'block';
+      const m = document.getElementById(id);
+      if (m) m.style.display = 'flex';
     }
 
     function closeModal(id) {
-      document.getElementById(id).style.display = 'none';
+      const m = document.getElementById(id);
+      if (m) m.style.display = 'none';
     }
 
     function calculate() {
@@ -1771,6 +1807,13 @@
       }
     };
 
+    window.closeModal = function(modalId) {
+      const m = document.getElementById(modalId);
+      if (m) {
+        m.style.display = 'none';
+      }
+    };
+
     function printAgreementDocument() {
       updateAgreementPreview();
       const btn = document.getElementById('btn-print-agreement');
@@ -1829,7 +1872,9 @@
       a.download = `SOS_Agreement_${client}.html`;
       document.body.appendChild(a);
       a.click();
-      document.body.removeChild(a);
+      const fileLabel = document.getElementById('saveModalFileName');
+      if (fileLabel) fileLabel.innerText = `SOS_Agreement_${client}.html`;
+      openModal('saveHelperModal');
       setTimeout(() => URL.revokeObjectURL(url), 2000);
     }
 
