@@ -537,7 +537,7 @@
     <div class="card">
       <div class="input-group">
         <label class="input-label" id="label-sqft" data-rename-key="label-sqft" style="cursor: pointer; user-select: none;" title="Long-press to rename">1. Total Office Cleanable Area (Sq Ft) *</label>
-        <input type="number" id="sqFt" class="input-field" value="8500" placeholder="e.g. 8,500" oninput="calculate()">
+        <input type="number" id="sqFt" class="input-field" value="8500" placeholder="e.g. 8,500">
       </div>
     </div>
 
@@ -585,7 +585,7 @@
       </div>
       <div style="display: flex; align-items: center; background: var(--silver-light); border: 1.2px solid var(--silver-border); border-radius: 10px; padding: 0 14px;">
         <span style="font-size: 20px; font-weight: 900; color: var(--gold); margin-right: 6px;">$</span>
-        <input type="number" id="hourlyRate" class="input-field" value="60" placeholder="60.00" style="background: transparent; border: none; padding: 12px 0; font-size: 22px; width: 100%;" oninput="calculate()">
+        <input type="number" id="hourlyRate" class="input-field" value="60" placeholder="60.00" style="background: transparent; border: none; padding: 12px 0; font-size: 22px; width: 100%;">
         <span style="font-size: 13px; font-weight: 700; color: var(--text-sub);">/ hr</span>
       </div>
     </div>
@@ -618,7 +618,7 @@
     </div>
 
     <!-- Calculate Button -->
-    <button class="btn-main" onclick="calculate()">⚡ CALCULATE QUOTE</button>
+    <button id="btn-main-calculate" class="btn-main" onclick="calculate()">⚡ CALCULATE QUOTE</button>
 
     <!-- Results Box (Executive Black & Gold) -->
     <div class="hero-card">
@@ -1299,7 +1299,6 @@
         occupants = Math.max(0, occupants + delta);
         document.getElementById('input-occupants').value = occupants;
       }
-      calculate();
     }
 
     // ==========================================
@@ -1430,7 +1429,6 @@
       } else if (type === 'occupants') {
         occupants = Math.max(0, parseInt(document.getElementById('input-occupants').value) || 0);
       }
-      calculate();
     }
 
     function setFreq(f) {
@@ -1440,7 +1438,6 @@
       });
       const monthlyVisits = (visitsPerWeek * 52 / 12).toFixed(1);
       document.getElementById('monthly-visits-hint').innerText = `${monthlyVisits} visits / mo`;
-      calculate();
     }
 
     function setDiff(d) {
@@ -1448,7 +1445,6 @@
       document.getElementById('diff-light').classList.toggle('active', d === 'light');
       document.getElementById('diff-normal').classList.toggle('active', d === 'normal');
       document.getElementById('diff-heavy').classList.toggle('active', d === 'heavy');
-      calculate();
     }
 
     function openModal(id) {
@@ -1457,10 +1453,23 @@
 
     function closeModal(id) {
       document.getElementById(id).style.display = 'none';
-      calculate();
     }
 
     function calculate() {
+      const calcBtn = document.getElementById('btn-main-calculate');
+      if (calcBtn) {
+        calcBtn.innerHTML = '✓ QUOTE CALCULATED';
+        calcBtn.style.background = '#10B981';
+        calcBtn.style.color = '#FFFFFF';
+        setTimeout(() => {
+          if (calcBtn) {
+            calcBtn.innerHTML = '⚡ CALCULATE QUOTE';
+            calcBtn.style.background = 'linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%)';
+            calcBtn.style.color = '#000000';
+          }
+        }, 1200);
+      }
+
       const sqft = parseFloat(document.getElementById('sqFt').value) || 0;
       const wage = parseFloat(document.getElementById('set-wage').value) || 24.0;
       const prodRate = parseFloat(document.getElementById('set-prod').value) || 3000.0;
