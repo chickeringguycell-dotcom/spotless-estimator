@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <meta name="theme-color" content="#090A0D">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -743,10 +743,14 @@
         </div>
 
         <!-- TAB 2: LIVE 4-PAGE CONTRACT PREVIEW (PRINTER-PERFECT) -->
-        <div id="proposal-preview-tab">
+        <div id="proposal-preview-tab" style="overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 25px; touch-action: pan-x pan-y;">
           
+          <div style="text-align: center; color: var(--gold); font-size: 11px; margin-bottom: 8px; font-weight: 700; background: rgba(212,175,55,0.1); border: 1px dashed var(--gold); padding: 6px; border-radius: 6px;">
+            👈 Slide with finger Left / Right to pan • Pinch to Zoom in/out 👉
+          </div>
+
           <!-- PRINT CONTAINER (Styled like white paper document for print/preview) -->
-          <div id="print-agreement-container" style="background: #FFFFFF; color: #0F172A; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); padding: 0;">
+          <div id="print-agreement-container" style="min-width: 680px; width: 100%; background: #FFFFFF; color: #0F172A; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); padding: 0;">
 
             <!-- ================= PAGE 1: PROPOSAL SUMMARY & COVER ================= -->
             <div class="agreement-page" id="contract-page-1" style="border-bottom: 2px dashed #CBD5E1;">
