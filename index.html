@@ -1703,7 +1703,8 @@
       if (document.getElementById('doc-restrooms')) document.getElementById('doc-restrooms').innerText = restrooms + ' Fixture Areas';
       if (document.getElementById('doc-kitchens')) document.getElementById('doc-kitchens').innerText = kitchens;
       if (document.getElementById('doc-occupants')) document.getElementById('doc-occupants').innerText = occupants + ' Personnel';
-      if (document.getElementById('doc-freq-label')) document.getElementById('doc-freq-label').innerText = frequency + 'x Cleanings Per Week';
+      const freqVal = (typeof visitsPerWeek !== 'undefined') ? visitsPerWeek : 3;
+      if (document.getElementById('doc-freq-label')) document.getElementById('doc-freq-label').innerText = freqVal + 'x Cleanings Per Week';
       if (document.getElementById('doc-start-date')) document.getElementById('doc-start-date').innerText = formattedStartDate;
       if (document.getElementById('doc-price-visit')) document.getElementById('doc-price-visit').innerText = visitPrice;
       if (document.getElementById('doc-price-monthly')) document.getElementById('doc-price-monthly').innerText = monthlyPrice;
@@ -1716,7 +1717,7 @@
       if (document.getElementById('doc-page4-id')) document.getElementById('doc-page4-id').innerText = generatedProposalId;
       if (document.getElementById('doc-final-client')) document.getElementById('doc-final-client').innerText = finalClient;
       if (document.getElementById('doc-final-address')) document.getElementById('doc-final-address').innerText = address;
-      if (document.getElementById('doc-final-freq')) document.getElementById('doc-final-freq').innerText = frequency + 'x Weekly';
+      if (document.getElementById('doc-final-freq')) document.getElementById('doc-final-freq').innerText = freqVal + 'x Weekly';
       if (document.getElementById('doc-final-monthly')) document.getElementById('doc-final-monthly').innerText = monthlyPrice + ' / Month';
       if (document.getElementById('doc-final-date')) document.getElementById('doc-final-date').innerText = formattedStartDate;
       if (document.getElementById('doc-sign-sos-date')) document.getElementById('doc-sign-sos-date').innerText = getFormattedDate();
@@ -1729,15 +1730,20 @@
     // Override openModal for proposalModal to auto-populate
     const originalOpenModal = window.openModal;
     window.openModal = function(modalId) {
+      const m = document.getElementById(modalId);
+      if (m) {
+        m.style.display = 'flex';
+      }
       if (modalId === 'proposalModal') {
-        updateAgreementPreview();
-        initSignatureCanvas();
+        try {
+          updateAgreementPreview();
+          initSignatureCanvas();
+        } catch(err) {
+          console.log('updateAgreementPreview note:', err);
+        }
       }
       if (typeof originalOpenModal === 'function') {
-        originalOpenModal(modalId);
-      } else {
-        const m = document.getElementById(modalId);
-        if (m) m.classList.add('active');
+        try { originalOpenModal(modalId); } catch(e){}
       }
     };
 
