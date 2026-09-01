@@ -1985,6 +1985,44 @@
       }
     }
 
+    function emailContractToBusiness() {
+      const clientName = document.getElementById('client-name') ? document.getElementById('client-name').value.trim() || 'Valued Client' : 'Valued Client';
+      const facilityAddr = document.getElementById('client-address') ? document.getElementById('client-address').value.trim() || 'On File' : 'On File';
+      const monthlyTotal = document.getElementById('val-monthly-total') ? document.getElementById('val-monthly-total').innerText : '$0.00';
+      const initialTotal = document.getElementById('val-initial-total') ? document.getElementById('val-initial-total').innerText : '$0.00';
+      const signName = document.getElementById('doc-sign-client-name') ? document.getElementById('doc-sign-client-name').innerText : 'Authorized Client Representative';
+      const signDate = document.getElementById('doc-sign-client-date') ? document.getElementById('doc-sign-client-date').innerText : new Date().toLocaleDateString();
+
+      const subject = `SIGNED COMMERCIAL CONTRACT: ${clientName} (${monthlyTotal}/mo)`;
+      const body = `SPOTLESS OFFICE SOLUTIONS LLC - SIGNED COMMERCIAL SERVICE CONTRACT
+
+CLIENT ACCOUNT INFORMATION:
+• Client Company: ${clientName}
+• Facility Address: ${facilityAddr}
+• Monthly Service Fee: ${monthlyTotal} / month
+• Initial Deep Clean: ${initialTotal}
+
+E-SIGNATURE & EXECUTION:
+• Signed By: ${signName}
+• Execution Date: ${signDate}
+• Service Provider: Spotless Office Solutions LLC
+• Primary Contact: Guy Chickering & Jacquise Arrington ((206) 578-0727)
+• Master Business Email: sos.cleaning@outlook.com
+
+STATUS: Signed Contract Logged and Ready for Accounting & Payroll Scheduling.
+`;
+
+      const mailtoUrl = `mailto:sos.cleaning@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      
+      const a = document.createElement('a');
+      a.href = mailtoUrl;
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      alert('✓ Signed contract summary prepared and dispatched to sos.cleaning@outlook.com!');
+    }
+
     function applySignatureToAgreement() {
       if (!sigCanvas) return;
       const dataUrl = sigCanvas.toDataURL('image/png');
@@ -2002,6 +2040,13 @@
       }
       closeModal('signatureModal');
       switchProposalTab('preview');
+      
+      // Auto-prompt email contract
+      setTimeout(function() {
+        if (confirm('Contract signed successfully! Would you like to email this signed agreement to sos.cleaning@outlook.com now?')) {
+          emailContractToBusiness();
+        }
+      }, 400);
     }
 
   </script>
