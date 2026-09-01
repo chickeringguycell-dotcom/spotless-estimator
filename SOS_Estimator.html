@@ -407,45 +407,80 @@
   </style>
 
   <style id="print-stylesheet">
+    @page {
+      size: letter portrait;
+      margin: 0.3in 0.4in;
+    }
     @media print {
-      body * {
-        visibility: hidden;
-      }
-      #print-agreement-container, #print-agreement-container * {
-        visibility: visible;
-      }
-      #print-agreement-container {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
+      html, body {
         background: #FFFFFF !important;
         color: #0F172A !important;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
-        margin: 0;
-        padding: 0;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
       }
-      .agreement-page {
-        width: 8.5in;
-        min-height: 10.5in;
-        padding: 0.5in 0.6in;
-        margin: 0 auto;
-        box-sizing: border-box;
-        page-break-after: always;
-        page-break-inside: avoid;
-        background: #FFFFFF !important;
-        color: #0F172A !important;
-        position: relative;
-      }
-      .agreement-page:last-child {
-        page-break-after: auto;
-      }
-      .no-print {
+      .app-container, .modal-overlay:not(#proposalModal) {
         display: none !important;
       }
-      @page {
-        size: letter portrait;
-        margin: 0.4in;
+      #proposalModal {
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        z-index: auto !important;
+      }
+      #proposalModal .modal-content {
+        display: block !important;
+        max-width: 100% !important;
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .modal-header, .proposal-toolbar, #proposal-scope-tab, .no-print {
+        display: none !important;
+      }
+      #proposal-preview-tab {
+        display: block !important;
+        overflow: visible !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      #print-agreement-container {
+        display: block !important;
+        min-width: 100% !important;
+        width: 100% !important;
+        position: static !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: #FFFFFF !important;
+        color: #0F172A !important;
+      }
+      .agreement-page {
+        width: 100% !important;
+        min-height: 9.8in !important;
+        padding: 0.2in 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
+        background: #FFFFFF !important;
+        color: #0F172A !important;
+        border-bottom: none !important;
+      }
+      .agreement-page:last-child {
+        page-break-after: auto !important;
       }
     }
   </style>
@@ -1707,82 +1742,14 @@
 
     function printAgreementDocument() {
       updateAgreementPreview();
-      const content = document.getElementById('print-agreement-container').innerHTML;
-      
-      // Open clean dedicated print window directly on user tap
-      const printWindow = window.open('', '_blank');
-      if (!printWindow) {
-        window.print();
-        return;
-      }
+      // Ensure preview tab is visible before printing
+      const scopeTab = document.getElementById('proposal-scope-tab');
+      const previewTab = document.getElementById('proposal-preview-tab');
+      if (scopeTab) scopeTab.style.display = 'none';
+      if (previewTab) previewTab.style.display = 'block';
 
-      printWindow.document.open();
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>Spotless Office Solutions - Commercial Cleaning Agreement</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <style>
-            @page {
-              size: letter portrait;
-              margin: 0.4in;
-            }
-            body {
-              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-              color: #0F172A;
-              background: #FFFFFF;
-              margin: 0;
-              padding: 15px;
-            }
-            .agreement-page {
-              width: 100%;
-              min-height: 9.8in;
-              padding: 0.2in 0;
-              box-sizing: border-box;
-              page-break-after: always;
-              page-break-inside: avoid;
-            }
-            .agreement-page:last-child {
-              page-break-after: auto;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-            }
-            .print-banner {
-              background: #0F172A;
-              color: #D4AF37;
-              padding: 12px;
-              text-align: center;
-              font-weight: 800;
-              font-size: 14px;
-              border-radius: 8px;
-              margin-bottom: 20px;
-              cursor: pointer;
-            }
-            @media print {
-              .print-banner { display: none !important; }
-              body { padding: 0; }
-            }
-          </style>
-        </head>
-        <body>
-          <div class="print-banner" onclick="window.print()">
-            🖨️ Tap Here if Printer Dialog Does Not Open Automatically
-          </div>
-          ${content}
-          <script>
-            window.onload = function() {
-              setTimeout(function() {
-                window.print();
-              }, 400);
-            };
-          </script>
-        </body>
-        </html>
-      `);
-      printWindow.document.close();
+      // Trigger system printer search dialog immediately on user gesture
+      window.print();
     }
 
     function shareAgreementDocument() {
