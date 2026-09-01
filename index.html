@@ -671,7 +671,7 @@
   </main>
 
   <!-- Commercial Cleaning Proposal & Agreement Modal -->
-  <div id="proposalModal" class="modal-overlay" style="z-index: 1000;">
+  <div id="proposalModal" class="modal-overlay" style="display: none; z-index: 1000;">
     <div class="modal-content" style="max-width: 850px; max-height: 92vh; padding: 0; overflow: hidden; display: flex; flex-direction: column;">
       
       <!-- Top Modal Navigation Bar -->
@@ -1135,7 +1135,7 @@
   </div>
 
   <!-- E-Signature Modal -->
-  <div id="signatureModal" class="modal-overlay" style="z-index: 1100;">
+  <div id="signatureModal" class="modal-overlay" style="display: none; z-index: 1100;">
     <div class="modal-content" style="max-width: 450px;">
       <div class="modal-header">
         <h3 style="font-weight: 900; color: var(--gold);">✍️ Draw Client Signature</h3>
@@ -1163,7 +1163,7 @@
   </div>
 
   <!-- Owner Audit Modal -->
-  <div id="auditModal" class="modal-overlay">
+  <div id="auditModal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
       <div class="modal-header">
         <h3 style="font-weight: 900; color: var(--gold);">Owner Math Audit (Confidential)</h3>
@@ -1176,7 +1176,7 @@
   </div>
 
   <!-- Advanced Adjustments Modal -->
-  <div id="advancedModal" class="modal-overlay">
+  <div id="advancedModal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
       <div class="modal-header">
         <h3 style="font-weight: 900; color: var(--gold);">Advanced Adjustments</h3>
@@ -1201,7 +1201,7 @@
   </div>
 
   <!-- Owner Settings Modal -->
-  <div id="ownerModal" class="modal-overlay">
+  <div id="ownerModal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
       <div class="modal-header">
         <h3 style="font-weight: 900; color: var(--gold);">Company Pricing Defaults</h3>
@@ -1233,9 +1233,8 @@
     </div>
   </div>
 
-  
   <!-- Long Press Rename Modal -->
-  <div id="renameModal" class="modal-overlay">
+  <div id="renameModal" class="modal-overlay" style="display: none;">
     <div class="modal-content" style="max-width: 400px;">
       <div class="modal-header">
         <h3 style="font-weight: 900; color: var(--gold);">✏️ Rename Field / App</h3>
@@ -1259,7 +1258,7 @@
   </div>
 
   <!-- Install Helper Modal -->
-  <div id="installHelperModal" class="modal-overlay">
+  <div id="installHelperModal" class="modal-overlay" style="display: none;">
     <div class="modal-content">
       <div class="modal-header">
         <h3 style="font-weight: 900; color: var(--gold);">★ App Downloaded!</h3>
@@ -1303,6 +1302,7 @@
         document.getElementById('input-occupants').value = occupants;
       }
       calculate();
+    }
 
     // ==========================================
     // LONG PRESS TO RENAME APP & INPUTS
