@@ -696,6 +696,32 @@
     </div>
   </div>
 
+  <!-- Install Helper Modal -->
+  <div id="installHelperModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 style="font-weight: 900; color: var(--gold);">★ App Downloaded!</h3>
+        <button class="close-btn" onclick="closeModal('installHelperModal')">&times;</button>
+      </div>
+      <div style="font-size: 13px; line-height: 1.6; color: #E2E8F0;">
+        <div style="background: rgba(212,175,55,0.1); border: 1px solid var(--gold); border-radius: 10px; padding: 12px; margin-bottom: 14px;">
+          <b style="color: var(--gold); font-size: 14px;">📥 SOS_Estimator.html is saved to your phone!</b>
+          <div style="font-size: 11px; color: #CBD5E1; margin-top: 4px;">You can open it from your phone's Downloads folder anytime 100% offline!</div>
+        </div>
+        
+        <div style="font-weight: 800; color: #FFFFFF; margin-bottom: 6px;">To put the SOS Estimator icon on your screen:</div>
+        <div style="margin-bottom: 8px;">
+          <b>• Android (Samsung):</b> Tap menu (⋮ or ☰) $\to$ tap <b>Add to Home screen</b>.
+        </div>
+        <div style="margin-bottom: 14px;">
+          <b>• Apple iPhone:</b> Tap Safari's <b>Share</b> button (square with arrow up) $\to$ tap <b>Add to Home Screen</b>.
+        </div>
+        
+        <button class="btn-main" onclick="closeModal('installHelperModal')">Got It</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     let restrooms = 4;
     let kitchens = 2;
@@ -882,8 +908,8 @@
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      const banner = document.getElementById('install-banner');
-      if (banner) banner.style.display = 'block';
+      const btn = document.getElementById('btn-install-app');
+      if (btn) btn.innerText = '⬇️ Install App';
     });
 
     function triggerInstall() {
@@ -896,7 +922,17 @@
           deferredPrompt = null;
         });
       } else {
-        alert("To install Spotless Estimator permanently:\\n\\n• On Android (Samsung): Tap the 3 dots (⋮) in Chrome -> tap 'Install app' or 'Add to Home screen'.\\n\\n• On Apple iPhone: Tap the Share button (square with arrow up) in Safari -> tap 'Add to Home Screen'.");
+        // Direct Download of Standalone Offline App
+        const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'SOS_Estimator.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        // Show gentle confirmation
+        openModal('installHelperModal');
       }
     }
 
