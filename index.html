@@ -1985,83 +1985,61 @@
       }
     }
 
-    function emailContractToBusiness() {
-      const clientName = document.getElementById('client-name') ? document.getElementById('client-name').value.trim() || 'Valued Client' : 'Valued Client';
-      const facilityAddr = document.getElementById('client-address') ? document.getElementById('client-address').value.trim() || 'On File' : 'On File';
-      const monthlyTotal = document.getElementById('val-monthly-total') ? document.getElementById('val-monthly-total').innerText : '$0.00';
-      const initialTotal = document.getElementById('val-initial-total') ? document.getElementById('val-initial-total').innerText : '$0.00';
-      const signName = document.getElementById('doc-sign-client-name') ? document.getElementById('doc-sign-client-name').innerText : 'Authorized Client Representative';
-      const signDate = document.getElementById('doc-sign-client-date') ? document.getElementById('doc-sign-client-date').innerText : new Date().toLocaleDateString();
+function emailContractToBusiness() {
+  const clientName = document.getElementById('client-name') ? document.getElementById('client-name').value.trim() || 'Valued Client' : 'Valued Client';
+  const facilityAddr = document.getElementById('client-address') ? document.getElementById('client-address').value.trim() || 'On File' : 'On File';
+  const monthlyTotal = document.getElementById('val-monthly-total') ? document.getElementById('val-monthly-total').innerText : '$0.00';
+  const initialTotal = document.getElementById('val-initial-total') ? document.getElementById('val-initial-total').innerText : '$0.00';
+  const signName = document.getElementById('doc-sign-client-name') ? document.getElementById('doc-sign-client-name').innerText : 'Authorized Client Representative';
+  const signDate = document.getElementById('doc-sign-client-date') ? document.getElementById('doc-sign-client-date').innerText : new Date().toLocaleDateString();
 
-      const subject = `SIGNED COMMERCIAL CONTRACT: ${clientName} (${monthlyTotal}/mo)`;
-      const body = `SPOTLESS OFFICE SOLUTIONS LLC - SIGNED COMMERCIAL SERVICE CONTRACT
+  const subject = "SIGNED COMMERCIAL CONTRACT: " + clientName + " (" + monthlyTotal + "/mo)";
+  const body = "SPOTLESS OFFICE SOLUTIONS LLC - SIGNED COMMERCIAL SERVICE CONTRACT%0D%0A%0D%0A" +
+    "CLIENT ACCOUNT INFORMATION:%0D%0A" +
+    "• Client Company: " + clientName + "%0D%0A" +
+    "• Facility Address: " + facilityAddr + "%0D%0A" +
+    "• Monthly Service Fee: " + monthlyTotal + " / month%0D%0A" +
+    "• Initial Deep Clean: " + initialTotal + "%0D%0A%0D%0A" +
+    "E-SIGNATURE & EXECUTION:%0D%0A" +
+    "• Signed By: " + signName + "%0D%0A" +
+    "• Execution Date: " + signDate + "%0D%0A" +
+    "• Service Provider: Spotless Office Solutions LLC%0D%0A" +
+    "• Primary Contact: Guy Chickering & Jacquise Arrington ((206) 578-0727)%0D%0A" +
+    "• Master Estimator Email: sos.estimator@outlook.com%0D%0A%0D%0A" +
+    "STATUS: Signed Contract Executed and Logged.%0D%0A";
 
-CLIENT ACCOUNT INFORMATION:
-• Client Company: ${clientName}
-• Facility Address: ${facilityAddr}
-• Monthly Service Fee: ${monthlyTotal} / month
-• Initial Deep Clean: ${initialTotal}
+  const mailtoUrl = "mailto:sos.estimator@outlook.com?subject=" + encodeURIComponent(subject) + "&body=" + body;
+  
+  const a = document.createElement('a');
+  a.href = mailtoUrl;
+  a.target = '_blank';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
 
-E-SIGNATURE & EXECUTION:
-• Signed By: ${signName}
-• Execution Date: ${signDate}
-• Service Provider: Spotless Office Solutions LLC
-• Primary Contact: Guy Chickering & Jacquise Arrington ((206) 578-0727)
-• Master Estimator Email: sos.estimator@outlook.com
-
-STATUS: Signed Contract Executed and Logged.
-`;
-
-      const mailtoUrl = `mailto:sos.estimator@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      
-      const a = document.createElement('a');
-      a.href = mailtoUrl;
-      a.target = '_blank';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    }
-
-    function applySignatureToAgreement() {
-      if (!sigCanvas) return;
-      const dataUrl = sigCanvas.toDataURL('image/png');
-      const sigDisplay = document.getElementById('client-sig-display');
-      const printName = document.getElementById('sigPrintName').value.trim() || 'Operations Director';
-      
-      if (sigDisplay) {
-        sigDisplay.innerHTML = `<img src="${dataUrl}" style="height: 50px; max-width: 200px; object-fit: contain;">`;
-      }
-      if (document.getElementById('doc-sign-client-name')) {
-        document.getElementById('doc-sign-client-name').innerText = printName;
-      }
-      if (document.getElementById('doc-sign-client-date')) {
-        document.getElementById('doc-sign-client-date').innerText = getFormattedDate();
-      }
-      closeModal('signatureModal');
-      switchProposalTab('preview');
-      
-      // Automatically email signed contract to sos.estimator@outlook.com
-      setTimeout(function() {
-        emailContractToBusiness();
-      }, 300);
-    }" style="height: 50px; max-width: 200px; object-fit: contain;">`;
-      }
-      if (document.getElementById('doc-sign-client-name')) {
-        document.getElementById('doc-sign-client-name').innerText = printName;
-      }
-      if (document.getElementById('doc-sign-client-date')) {
-        document.getElementById('doc-sign-client-date').innerText = getFormattedDate();
-      }
-      closeModal('signatureModal');
-      switchProposalTab('preview');
-      
-      // Auto-prompt email contract
-      setTimeout(function() {
-        if (confirm('Contract signed successfully! Would you like to email this signed agreement to sos.estimator@outlook.com now?')) {
-          emailContractToBusiness();
-        }
-      }, 400);
-    }
+function applySignatureToAgreement() {
+  if (!sigCanvas) return;
+  const dataUrl = sigCanvas.toDataURL('image/png');
+  const sigDisplay = document.getElementById('client-sig-display');
+  const printName = document.getElementById('sigPrintName').value.trim() || 'Operations Director';
+  
+  if (sigDisplay) {
+    sigDisplay.innerHTML = '<img src="' + dataUrl + '" style="height: 50px; max-width: 200px; object-fit: contain;">';
+  }
+  if (document.getElementById('doc-sign-client-name')) {
+    document.getElementById('doc-sign-client-name').innerText = printName;
+  }
+  if (document.getElementById('doc-sign-client-date')) {
+    document.getElementById('doc-sign-client-date').innerText = getFormattedDate();
+  }
+  closeModal('signatureModal');
+  switchProposalTab('preview');
+  
+  setTimeout(function() {
+    emailContractToBusiness();
+  }, 300);
+}
 
   </script>
 </body>
