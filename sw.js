@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sos-proposal-v5';
+const CACHE_NAME = 'sos-proposal-v7';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
